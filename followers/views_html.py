@@ -1,14 +1,9 @@
-# followers/views_html.py
-
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .models import Follower
 
-# -----------------------
-# List users the current user is following and handle search
-# -----------------------
 @login_required
 def following_list_view(request):
     query = request.GET.get('q')
@@ -33,9 +28,6 @@ def following_list_view(request):
     following = Follower.objects.filter(follower=request.user)
     return render(request, "followers/followers_list.html", {"following": following, "users_found": users_found})
 
-# -----------------------
-# Unfollow a user
-# -----------------------
 @login_required
 def unfollow_user_view(request, user_id):
     follow_instance = get_object_or_404(Follower, follower=request.user, following__id=user_id)

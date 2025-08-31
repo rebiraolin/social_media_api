@@ -1,6 +1,4 @@
-// Wait for DOM to load
 document.addEventListener("DOMContentLoaded", () => {
-    // Like button toggle
     const likeButtons = document.querySelectorAll(".like-btn");
     likeButtons.forEach(btn => {
         btn.addEventListener("click", () => {
@@ -15,7 +13,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // Comment toggle
     const commentButtons = document.querySelectorAll(".comment-btn");
     commentButtons.forEach(btn => {
         btn.addEventListener("click", () => {
@@ -26,7 +23,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // Flash messages auto-hide
     const flash = document.querySelector(".flash-message");
     if (flash) {
         setTimeout(() => {

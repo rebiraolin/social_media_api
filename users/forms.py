@@ -1,9 +1,6 @@
-# users/forms.py
-
 from django import forms
 from django.contrib.auth.models import User
 from .models import Profile
-
 
 class UserRegistrationForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput)
@@ -25,7 +22,6 @@ class LoginForm(forms.Form):
     password = forms.CharField(widget=forms.PasswordInput)
 
 
-# A single form for updating username, bio, and profile picture
 class UserProfileUpdateForm(forms.ModelForm):
     username = forms.CharField(required=True)
 
@@ -34,7 +30,7 @@ class UserProfileUpdateForm(forms.ModelForm):
         fields = ['bio', 'profile_picture']
         widgets = {
             'bio': forms.Textarea(attrs={'rows': 4, 'cols': 40}),
-            'profile_picture': forms.FileInput(),  # Use a simple FileInput widget
+            'profile_picture': forms.FileInput(),
         }
 
     def __init__(self, *args, **kwargs):

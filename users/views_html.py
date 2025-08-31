@@ -4,12 +4,9 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from .forms import UserRegistrationForm, LoginForm, UserProfileUpdateForm
 from .models import Profile
-from posts.models import Post # New Import
-from followers.models import Follower # New Import
+from posts.models import Post
+from followers.models import Follower
 
-# -----------------------
-# Registration View
-# -----------------------
 def register_view(request):
     if request.method == "POST":
         form = UserRegistrationForm(request.POST)
@@ -23,9 +20,6 @@ def register_view(request):
         form = UserRegistrationForm()
     return render(request, "users/register.html", {"form": form})
 
-# -----------------------
-# Login View
-# -----------------------
 def login_view(request):
     if request.method == "POST":
         form = LoginForm(request.POST)
@@ -42,16 +36,10 @@ def login_view(request):
         form = LoginForm()
     return render(request, "users/login.html", {"form": form})
 
-# -----------------------
-# Logout View
-# -----------------------
 def logout_view(request):
     logout(request)
     return redirect("login")
 
-# -----------------------
-# Profile View (Display only)
-# -----------------------
 @login_required
 def profile_view(request, username=None):
     if username:
@@ -75,9 +63,6 @@ def profile_view(request, username=None):
     }
     return render(request, 'users/profile.html', context)
 
-# -----------------------
-# Edit Profile View (Handles the form)
-# -----------------------
 @login_required
 def edit_profile_view(request):
     profile = get_object_or_404(Profile, user=request.user)
@@ -94,7 +79,7 @@ def edit_profile_view(request):
 def remove_profile_picture(request):
     profile = get_object_or_404(Profile, user=request.user)
     if profile.profile_picture:
-        profile.profile_picture.delete(save=False) # Delete the file from the filesystem
+        profile.profile_picture.delete(save=False)
         profile.profile_picture = None
         profile.save()
     return redirect('edit_profile')

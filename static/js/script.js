@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // Like toggle
   document.querySelectorAll(".btn-like").forEach(btn => {
     btn.addEventListener("click", () => {
       btn.classList.toggle("liked");
@@ -7,7 +6,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // Follow toggle
   document.querySelectorAll(".btn-follow").forEach(btn => {
     btn.addEventListener("click", () => {
       btn.classList.toggle("following");
@@ -15,7 +13,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // Confirm before deleting
   document.querySelectorAll("form[onsubmit]").forEach(form => {
     form.addEventListener("submit", (e) => {
       if (!confirm("Are you sure?")) {

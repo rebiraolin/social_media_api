@@ -1,5 +1,3 @@
-# posts/views_html.py
-
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .models import Post
@@ -53,7 +51,6 @@ def edit_post_view(request, post_id):
 @login_required
 def delete_post_view(request, post_id):
     post = get_object_or_404(Post, id=post_id)
-    # Check if the logged-in user is the owner of the post
     if request.user == post.user:
         post.delete()
     return redirect('my_posts')
