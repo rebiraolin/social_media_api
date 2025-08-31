@@ -20,8 +20,14 @@ from rest_framework.authtoken import views
 from users.views import RegisterUserView
 from django.conf import settings
 from django.conf.urls.static import static
+from django.shortcuts import redirect
+
+
+def redirect_to_register(request):
+    return redirect('user-register')
 
 urlpatterns = [
+    path('', redirect_to_register),
     path('admin/', admin.site.urls),
 
     path('posts/', include('posts.urls')),
