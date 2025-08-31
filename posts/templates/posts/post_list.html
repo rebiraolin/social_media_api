@@ -1,33 +1,39 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1 class="mb-4">All Posts</h1>
+<div class="card p-4">
+    <h1 class="mb-4">All Posts</h1>
 
-<div class="d-flex mb-4">
-    <a href="{% url 'create_post' %}" class="btn btn-success me-2">Create New Post</a>
-    <a href="{% url 'my_posts' %}" class="btn btn-primary">My Posts</a>
-</div>
-
-<form method="GET" class="mb-3">
-    <div class="input-group">
-        <input type="text" name="q" class="form-control" placeholder="Search posts" value="{{ request.GET.q }}">
-        <button type="submit" class="btn btn-secondary">Search</button>
+    <div class="d-flex mb-4">
+        <a href="{% url 'create_post' %}" class="btn btn-success me-2">Create New Post</a>
+        <a href="{% url 'my_posts' %}" class="btn btn-primary">My Posts</a>
     </div>
-</form>
 
-<ul class="list-group">
-    {% for post in posts %}
-    <li class="list-group-item">
-        <strong><a href="{% url 'user-profile' post.user.username %}">{{ post.user.username }}</a></strong>: {{ post.content }}
-        {% if post.media %}
-        <br>
-        <a href="{{ post.media.url }}" target="_blank">View Media</a>
-        {% endif %}
-        <br>
-        <small>{{ post.timestamp }}</small>
-    </li>
-    {% empty %}
-    <li class="list-group-item">No posts yet.</li>
-    {% endfor %}
-</ul>
+    <!-- Search Form -->
+    <form method="GET" class="mb-3">
+        <div class="input-group">
+            <input type="text" name="q" class="form-control" placeholder="Search posts" value="{{ request.GET.q }}">
+            <button type="submit" class="btn btn-outline-secondary">Search</button>
+        </div>
+    </form>
+
+    <ul class="list-group">
+        {% for post in posts %}
+        <li class="list-group-item mb-3">
+            <div class="post">
+                <div class="author">
+                    <a href="{% url 'user-profile' post.user.username %}" class="fw-bold text-primary">{{ post.user.username }}</a>
+                </div>
+                <div class="content">{{ post.content }}</div>
+                {% if post.media %}
+                    <a href="{{ post.media.url }}" target="_blank" class="btn btn-outline-primary btn-sm mt-1">View Media</a>
+                {% endif %}
+                <small class="text-muted d-block mt-1">{{ post.timestamp }}</small>
+            </div>
+        </li>
+        {% empty %}
+        <li class="list-group-item text-muted">No posts yet.</li>
+        {% endfor %}
+    </ul>
+</div>
 {% endblock %}

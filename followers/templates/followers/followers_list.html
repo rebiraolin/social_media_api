@@ -1,39 +1,51 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1 class="mb-4">Following</h1>
+<div class="card">
+    <h1 class="mb-4">Following</h1>
 
-<form method="GET" class="mb-3" action="{% url 'following-list' %}">
-    <div class="input-group">
-        <input type="text" name="q" class="form-control" placeholder="Search users" value="{{ request.GET.q }}">
-        <button type="submit" class="btn btn-secondary">Search</button>
-    </div>
-</form>
+    <!-- Search Users -->
+    <form method="GET" class="mb-3" action="{% url 'following-list' %}">
+        <div class="input-group">
+            <input type="text" name="q" class="form-control" placeholder="Search users" value="{{ request.GET.q }}">
+            <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+    </form>
 
-{% if users_found %}
-    <h2 class="mt-4">Search Results</h2>
-    <ul class="list-group mb-4">
-        {% for user in users_found %}
+    <!-- Search Results -->
+    {% if users_found %}
+        <h2 class="mt-4">Search Results</h2>
+        <ul class="list-group mb-4">
+            {% for user in users_found %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <a href="{% url 'user-profile' user.username %}" class="fw-bold text-primary">
+                    {{ user.username }}
+                </a>
+                <form method="POST" action="{% url 'following-list' %}" class="d-inline">
+                    {% csrf_token %}
+                    <input type="hidden" name="username_to_follow" value="{{ user.username }}">
+                    <button type="submit" class="btn btn-success btn-sm">Follow</button>
+                </form>
+            </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <!-- Following List -->
+    <h2 class="mt-4">People You Follow</h2>
+    <ul class="list-group">
+        {% for follow in following %}
         <li class="list-group-item d-flex justify-content-between align-items-center">
-            <a href="{% url 'user-profile' user.username %}">{{ user.username }}</a>
-            <form method="POST" action="{% url 'following-list' %}">
-                {% csrf_token %}
-                <input type="hidden" name="username_to_follow" value="{{ user.username }}">
-                <button type="submit" class="btn btn-primary btn-sm">Follow</button>
-            </form>
+            <a href="{% url 'user-profile' follow.following.username %}" class="fw-bold text-dark">
+                {{ follow.following.username }}
+            </a>
+            <a href="{% url 'unfollow-user' follow.following.id %}" class="btn btn-outline-danger btn-sm">
+                Unfollow
+            </a>
         </li>
+        {% empty %}
+        <li class="list-group-item text-muted">You are not following anyone yet.</li>
         {% endfor %}
     </ul>
-{% endif %}
-
-<ul class="list-group">
-    {% for follow in following %}
-    <li class="list-group-item d-flex justify-content-between align-items-center">
-        <a href="{% url 'user-profile' follow.following.username %}">{{ follow.following.username }}</a>
-        <a href="{% url 'unfollow-user' follow.following.id %}" class="btn btn-danger btn-sm">Unfollow</a>
-    </li>
-    {% empty %}
-    <li class="list-group-item">You are not following anyone yet.</li>
-    {% endfor %}
-</ul>
+</div>
 {% endblock %}

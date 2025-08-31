@@ -1,34 +1,37 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1 class="mb-4">My Posts</h1>
+<div class="card p-4">
+    <h1 class="mb-4">My Posts</h1>
 
-<div class="d-flex mb-4">
-    <a href="{% url 'create_post' %}" class="btn btn-success me-2">Create New Post</a>
-    <a href="{% url 'post_list' %}" class="btn btn-primary">All Posts</a>
+    <div class="d-flex mb-4">
+        <a href="{% url 'create_post' %}" class="btn btn-success me-2">Create New Post</a>
+        <a href="{% url 'post_list' %}" class="btn btn-primary">All Posts</a>
+    </div>
+
+    <ul class="list-group">
+        {% for post in my_posts %}
+        <li class="list-group-item mb-3">
+            <div class="post">
+                <div class="author">{{ post.user.username }}</div>
+                <div class="content">{{ post.content }}</div>
+                {% if post.media %}
+                    <a href="{{ post.media.url }}" target="_blank" class="btn btn-outline-primary btn-sm mt-1">View Media</a>
+                {% endif %}
+                <small class="text-muted d-block mt-1">{{ post.timestamp }}</small>
+
+                <div class="mt-2">
+                    <a href="{% url 'edit_post' post.id %}" class="btn btn-outline-secondary btn-sm me-1">Edit</a>
+                    <form method="POST" action="{% url 'delete_post' post.id %}" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this post?');">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-outline-danger btn-sm">Delete</button>
+                    </form>
+                </div>
+            </div>
+        </li>
+        {% empty %}
+        <li class="list-group-item text-muted">No posts yet.</li>
+        {% endfor %}
+    </ul>
 </div>
-
-<ul class="list-group">
-    {% for post in my_posts %}
-    <li class="list-group-item">
-        <strong>{{ post.user.username }}</strong>: {{ post.content }}
-        <br>
-        <small>{{ post.timestamp }}</small>
-        {% if post.media %}
-            <br>
-            <a href="{{ post.media.url }}" target="_blank">View Media</a>
-        {% endif %}
-
-        <div class="d-inline-block ms-3">
-            <a href="{% url 'edit_post' post.id %}" class="btn btn-secondary btn-sm me-1">Edit</a>
-            <form method="POST" action="{% url 'delete_post' post.id %}" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this post?');">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-            </form>
-        </div>
-    </li>
-    {% empty %}
-    <li class="list-group-item">No posts yet.</li>
-    {% endfor %}
-</ul>
 {% endblock %}
