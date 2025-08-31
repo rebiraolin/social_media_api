@@ -2,6 +2,12 @@ from rest_framework import generics, viewsets
 from django.contrib.auth.models import User
 from .serializers import UserRegistrationSerializer, UserSerializer, ProfileSerializer
 from .models import Profile
+from django.shortcuts import render
+
+
+def home(request):
+    return render(request, 'index.html')
+
 
 class RegisterUserView(generics.CreateAPIView):
     serializer_class = UserRegistrationSerializer

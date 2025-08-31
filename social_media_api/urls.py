@@ -17,12 +17,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework.authtoken import views
-from users.views import RegisterUserView
+from users.views import RegisterUserView, home
 from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('',home),
     path('posts/', include('posts.urls')),
     path('users/', include('users.urls')),
     path('followers/', include('followers.urls')),
