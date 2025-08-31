@@ -11,7 +11,9 @@
 <ul class="list-group">
     {% for post in posts %}
     <li class="list-group-item">
-        <strong>{{ post.user.username }}</strong>: {{ post.content }}
+        <a href="{% url 'user-profile' post.user.username %}">
+            <strong>{{ post.user.username }}</strong>
+        </a>: {{ post.content }}
         {% if post.media %}
         <br>
         <a href="{{ post.media.url }}" target="_blank">View Media</a>

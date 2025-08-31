@@ -1,10 +1,11 @@
-# users/views_html.py
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from .forms import UserRegistrationForm, LoginForm, UserProfileUpdateForm # Only import the new form
+from .forms import UserRegistrationForm, LoginForm, UserProfileUpdateForm
 from .models import Profile
+from posts.models import Post # New Import
+from followers.models import Follower # New Import
 
 # -----------------------
 # Registration View
@@ -54,15 +55,26 @@ def logout_view(request):
 @login_required
 def profile_view(request, username=None):
     if username:
-        user = get_object_or_404(User, username=username)
+        user_to_view = get_object_or_404(User, username=username)
     else:
-        user = request.user
+        user_to_view = request.user
 
-    # Change 'profile' to 'user_profile'
+    is_following = False
+    if request.user != user_to_view:
+        is_following = Follower.objects.filter(
+            follower=request.user,
+            following=user_to_view
+        ).exists()
+
+    posts = Post.objects.filter(user=user_to_view).order_by('-timestamp')
+
     context = {
-        'user_profile': user,
+        'user_profile': user_to_view,
+        'is_following': is_following,
+        'posts': posts,
     }
     return render(request, 'users/profile.html', context)
+
 # -----------------------
 # Edit Profile View (Handles the form)
 # -----------------------

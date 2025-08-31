@@ -26,14 +26,6 @@
     </ul>
 {% endif %}
 
-<form method="POST" class="mb-3">
-    {% csrf_token %}
-    <div class="input-group">
-        <input type="text" name="username_to_follow" class="form-control" placeholder="Enter username to follow" required>
-        <button type="submit" class="btn btn-primary">Follow</button>
-    </div>
-</form>
-
 <ul class="list-group">
     {% for follow in following %}
     <li class="list-group-item d-flex justify-content-between align-items-center">

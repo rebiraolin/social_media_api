@@ -24,8 +24,35 @@
 
             {% if request.user == user_profile %}
                 <a href="{% url 'edit_profile' %}" class="btn btn-primary mt-3">Edit Profile</a>
+            {% else %}
+                <form method="POST" action="{% url 'following-list' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="username_to_follow" value="{{ user_profile.username }}">
+                    {% if is_following %}
+                        <a href="{% url 'unfollow-user' user_profile.id %}" class="btn btn-danger mt-3">Unfollow</a>
+                    {% else %}
+                        <button type="submit" class="btn btn-success mt-3">Follow</button>
+                    {% endif %}
+                </form>
             {% endif %}
         </div>
+
+        <h3 class="mt-5 mb-3">Posts by {{ user_profile.username }}</h3>
+        <ul class="list-group">
+            {% for post in posts %}
+            <li class="list-group-item">
+                <strong>{{ post.user.username }}</strong>: {{ post.content }}
+                {% if post.media %}
+                <br>
+                <a href="{{ post.media.url }}" target="_blank">View Media</a>
+                {% endif %}
+                <br>
+                <small>{{ post.created_at }}</small>
+            </li>
+            {% empty %}
+            <li class="list-group-item">No posts yet.</li>
+            {% endfor %}
+        </ul>
 
         <a href="{% url 'post_list' %}" class="btn btn-secondary mt-4">Back to Posts</a>
     </div>
