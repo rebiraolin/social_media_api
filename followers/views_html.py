@@ -1,42 +1,37 @@
+# followers/views_html.py
+
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
-from .models import Follower
 from django.contrib.auth.models import User
-from django.http import HttpResponseBadRequest
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from .models import Follower
 
 # -----------------------
-# List users the current user is following
+# List users the current user is following and handle search
 # -----------------------
 @login_required
 def following_list_view(request):
+    query = request.GET.get('q')
+    users_found = None
+    if query:
+        users_found = User.objects.filter(username__icontains=query).exclude(id=request.user.id)
+
+    if request.method == 'POST':
+        username_to_follow = request.POST.get('username_to_follow')
+        if username_to_follow:
+            try:
+                user_to_follow = User.objects.get(username=username_to_follow)
+                if request.user == user_to_follow:
+                    messages.error(request, "You cannot follow yourself.")
+                else:
+                    Follower.objects.get_or_create(follower=request.user, following=user_to_follow)
+                    messages.success(request, f"You are now following {username_to_follow}.")
+            except User.DoesNotExist:
+                messages.error(request, f"User '{username_to_follow}' does not exist.")
+        return redirect('following-list')
+
     following = Follower.objects.filter(follower=request.user)
-    return render(request, "followers/followers_list.html", {"following": following})
-
-# -----------------------
-# Follow a user
-# -----------------------
-@login_required
-def follow_user_view(request):
-    identifier = request.GET.get('user')  # Could be ID or username
-    if not identifier:
-        return HttpResponseBadRequest("User identifier required")
-
-    # Try to get by ID first, then by username
-    user_to_follow = None
-    if identifier.isdigit():
-        user_to_follow = User.objects.filter(id=int(identifier)).first()
-    if not user_to_follow:
-        user_to_follow = User.objects.filter(username=identifier).first()
-    if not user_to_follow:
-        return HttpResponseBadRequest("User not found")
-
-    if user_to_follow == request.user:
-        return HttpResponseBadRequest("Cannot follow yourself")
-
-    if not Follower.objects.filter(follower=request.user, following=user_to_follow).exists():
-        Follower.objects.create(follower=request.user, following=user_to_follow)
-
-    return redirect("following-list")
+    return render(request, "followers/followers_list.html", {"following": following, "users_found": users_found})
 
 # -----------------------
 # Unfollow a user

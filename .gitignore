@@ -1,0 +1,5 @@
+# Ignore the media folder and its contents
+media/
+
+# Ignore the profile_pictures folder and its contents
+profile_pictures/

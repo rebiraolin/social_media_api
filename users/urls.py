@@ -22,7 +22,8 @@ urlpatterns = [
     path('register/', register_view, name='user-register'),
     path('login/', login_view, name='login'),
     path('logout/', logout_view, name='logout'),
-    path('profile/', profile_view, name='user-profile'),
+    path('profile/', profile_view, name='my-profile'),  # Changed URL name to 'my-profile'
     path('profile/edit/', edit_profile_view, name='edit_profile'),
     path('profile/remove-picture/', remove_profile_picture, name='remove_profile_picture'),
+    path('profile/<str:username>/', profile_view, name='user-profile'), # This one is for other users
 ]

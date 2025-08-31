@@ -1,13 +1,35 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>Following</h2>
+<h1 class="mb-4">Following</h1>
 
-<!-- Form to follow a new user -->
+<form method="GET" class="mb-3" action="{% url 'following-list' %}">
+    <div class="input-group">
+        <input type="text" name="q" class="form-control" placeholder="Search users" value="{{ request.GET.q }}">
+        <button type="submit" class="btn btn-secondary">Search</button>
+    </div>
+</form>
+
+{% if users_found %}
+    <h2 class="mt-4">Search Results</h2>
+    <ul class="list-group mb-4">
+        {% for user in users_found %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            <a href="{% url 'user-profile' user.username %}">{{ user.username }}</a>
+            <form method="POST" action="{% url 'following-list' %}">
+                {% csrf_token %}
+                <input type="hidden" name="username_to_follow" value="{{ user.username }}">
+                <button type="submit" class="btn btn-primary btn-sm">Follow</button>
+            </form>
+        </li>
+        {% endfor %}
+    </ul>
+{% endif %}
+
 <form method="POST" class="mb-3">
     {% csrf_token %}
     <div class="input-group">
-        <input type="number" name="user_id" class="form-control" placeholder="Enter User ID to follow" required>
+        <input type="text" name="username_to_follow" class="form-control" placeholder="Enter username to follow" required>
         <button type="submit" class="btn btn-primary">Follow</button>
     </div>
 </form>
@@ -15,7 +37,7 @@
 <ul class="list-group">
     {% for follow in following %}
     <li class="list-group-item d-flex justify-content-between align-items-center">
-        {{ follow.following.username }}
+        <a href="{% url 'user-profile' follow.following.username %}">{{ follow.following.username }}</a>
         <a href="{% url 'unfollow-user' follow.following.id %}" class="btn btn-danger btn-sm">Unfollow</a>
     </li>
     {% empty %}

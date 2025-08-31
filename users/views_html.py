@@ -1,5 +1,5 @@
 # users/views_html.py
-
+from django.contrib.auth.models import User
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -52,10 +52,17 @@ def logout_view(request):
 # Profile View (Display only)
 # -----------------------
 @login_required
-def profile_view(request):
-    profile = get_object_or_404(Profile, user=request.user)
-    return render(request, "users/profile.html", {"profile": profile})
+def profile_view(request, username=None):
+    if username:
+        user = get_object_or_404(User, username=username)
+    else:
+        user = request.user
 
+    # Change 'profile' to 'user_profile'
+    context = {
+        'user_profile': user,
+    }
+    return render(request, 'users/profile.html', context)
 # -----------------------
 # Edit Profile View (Handles the form)
 # -----------------------
@@ -66,7 +73,7 @@ def edit_profile_view(request):
         form = UserProfileUpdateForm(request.POST, request.FILES, instance=profile)
         if form.is_valid():
             form.save()
-            return redirect("user-profile")
+            return redirect("user-profile", username=request.user.username)
     else:
         form = UserProfileUpdateForm(instance=profile)
     return render(request, "users/edit_profile.html", {"form": form, "profile": profile})
