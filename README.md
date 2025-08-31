@@ -2,6 +2,8 @@
 
 A Django-based social media application with both HTML frontend and REST API endpoints. Users can register, login, create posts, follow/unfollow other users, and manage their profiles. The project uses Django REST Framework for API functionality.
 
+The app is deployed at: [https://social-media-api-lgne.onrender.com](https://social-media-api-lgne.onrender.com)
+
 ---
 
 ## Features
@@ -36,6 +38,7 @@ Create a virtual environment
 bash
 Copy code
 python -m venv venv
+# Activate
 source venv/bin/activate      # Linux/macOS
 venv\Scripts\activate         # Windows
 Install dependencies
@@ -58,7 +61,7 @@ Run the development server
 bash
 Copy code
 python manage.py runserver
-The app will be available at http://127.0.0.1:8000/.
+Visit http://127.0.0.1:8000/ to see the app in action.
 
 Directory Structure
 bash
@@ -107,3 +110,5 @@ Media files are served only in development (DEBUG=True)
 Frontend uses Bootstrap 5 for responsive design
 
 The project uses SQLite by default; switch to PostgreSQL or MySQL for production
+
+Deployment is configured on Render
