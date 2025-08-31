@@ -1,0 +1,33 @@
+document.addEventListener("DOMContentLoaded", () => {
+    const likeButtons = document.querySelectorAll(".like-btn");
+    likeButtons.forEach(btn => {
+        btn.addEventListener("click", () => {
+            btn.classList.toggle("liked");
+            if (btn.classList.contains("liked")) {
+                btn.style.color = "#2d88ff";
+                btn.textContent = "❤️ Liked";
+            } else {
+                btn.style.color = "#555";
+                btn.textContent = "🤍 Like";
+            }
+        });
+    });
+
+    const commentButtons = document.querySelectorAll(".comment-btn");
+    commentButtons.forEach(btn => {
+        btn.addEventListener("click", () => {
+            const commentBox = btn.closest(".post").querySelector(".comment-box");
+            if (commentBox) {
+                commentBox.classList.toggle("hidden");
+            }
+        });
+    });
+
+    const flash = document.querySelector(".flash-message");
+    if (flash) {
+        setTimeout(() => {
+            flash.style.opacity = "0";
+            setTimeout(() => flash.remove(), 500);
+        }, 4000);
+    }
+});
