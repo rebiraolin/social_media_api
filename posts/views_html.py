@@ -4,18 +4,26 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .models import Post
 from .forms import PostForm
+from django.db.models import Q
 
 @login_required
 def post_list_view(request):
-    # Change 'created_at' to 'timestamp'
     posts = Post.objects.all().order_by('-timestamp')
+    query = request.GET.get('q')
+    if query:
+        posts = posts.filter(
+            Q(content__icontains=query) |
+            Q(user__username__icontains=query)
+        )
     return render(request, "posts/post_list.html", {"posts": posts})
 
 @login_required
 def my_posts_view(request):
-    # Change 'created_at' to 'timestamp'
-    posts = Post.objects.filter(user=request.user).order_by('-timestamp')
-    return render(request, "posts/my_posts.html", {"posts": posts})
+    my_posts = Post.objects.filter(user=request.user).order_by('-timestamp')
+    context = {
+        'my_posts': my_posts,
+    }
+    return render(request, "posts/my_posts.html", context)
 
 @login_required
 def create_post_view(request):
@@ -41,3 +49,11 @@ def edit_post_view(request, post_id):
     else:
         form = PostForm(instance=post)
     return render(request, "posts/edit_post.html", {"form": form, "post": post})
+
+@login_required
+def delete_post_view(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    # Check if the logged-in user is the owner of the post
+    if request.user == post.user:
+        post.delete()
+    return redirect('my_posts')

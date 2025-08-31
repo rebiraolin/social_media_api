@@ -8,18 +8,23 @@
     <a href="{% url 'my_posts' %}" class="btn btn-primary">My Posts</a>
 </div>
 
+<form method="GET" class="mb-3">
+    <div class="input-group">
+        <input type="text" name="q" class="form-control" placeholder="Search posts" value="{{ request.GET.q }}">
+        <button type="submit" class="btn btn-secondary">Search</button>
+    </div>
+</form>
+
 <ul class="list-group">
     {% for post in posts %}
     <li class="list-group-item">
-        <a href="{% url 'user-profile' post.user.username %}">
-            <strong>{{ post.user.username }}</strong>
-        </a>: {{ post.content }}
+        <strong><a href="{% url 'user-profile' post.user.username %}">{{ post.user.username }}</a></strong>: {{ post.content }}
         {% if post.media %}
         <br>
         <a href="{{ post.media.url }}" target="_blank">View Media</a>
         {% endif %}
         <br>
-        <small>{{ post.created_at }}</small>
+        <small>{{ post.timestamp }}</small>
     </li>
     {% empty %}
     <li class="list-group-item">No posts yet.</li>
