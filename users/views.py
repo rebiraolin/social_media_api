@@ -5,9 +5,6 @@ from .models import Profile
 from django.shortcuts import render
 
 
-def home(request):
-    return render(request, 'index.html')
-
 
 class RegisterUserView(generics.CreateAPIView):
     serializer_class = UserRegistrationSerializer

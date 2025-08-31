@@ -1,6 +1,12 @@
 from rest_framework import generics, permissions
 from .models import Follower
 from .serializers import FollowerSerializer
+from django.shortcuts import render
+
+
+def home(request):
+    return render(request, 'index.html')
+
 
 class FollowingListCreateView(generics.ListCreateAPIView):
     queryset = Follower.objects.all()
@@ -21,3 +27,4 @@ class UnfollowView(generics.DestroyAPIView):
     def get_object(self):
         following_id = self.kwargs["following_id"]
         return Follower.objects.get(follower=self.request.user, following_id=following_id)
+
