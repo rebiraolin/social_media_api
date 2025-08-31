@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 class="mb-4">All Posts</h1>
+
+<div class="d-flex mb-4">
+    <a href="{% url 'create_post' %}" class="btn btn-success me-2">Create New Post</a>
+    <a href="{% url 'my_posts' %}" class="btn btn-primary">My Posts</a>
+</div>
+
+<ul class="list-group">
+    {% for post in posts %}
+    <li class="list-group-item">
+        <strong>{{ post.user.username }}</strong>: {{ post.content }}
+        {% if post.media %}
+        <br>
+        <a href="{{ post.media.url }}" target="_blank">View Media</a>
+        {% endif %}
+        <br>
+        <small>{{ post.created_at }}</small>
+    </li>
+    {% empty %}
+    <li class="list-group-item">No posts yet.</li>
+    {% endfor %}
+</ul>
+{% endblock %}

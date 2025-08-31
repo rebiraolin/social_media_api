@@ -4,8 +4,8 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.filters import OrderingFilter
 from .models import Post
 from .serializers import PostSerializer
-from followers.models import Follower
 from .permissions import IsOwnerOrReadOnly
+from followers.models import Follower
 
 class CustomPagination(PageNumberPagination):
     page_size = 10
@@ -34,7 +34,7 @@ class FeedView(generics.ListAPIView):
     pagination_class = CustomPagination
     filter_backends = [OrderingFilter]
     ordering_fields = ['timestamp', 'user']
-    ordering = ['-timestamp'] # This sets a default sort order
+    ordering = ['-timestamp']
 
     def get_queryset(self):
         user = self.request.user

@@ -18,14 +18,21 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path, include
-from rest_framework.authtoken import views  # Import the authtoken views
-from users.views import RegisterUserView  # Import your new view
+from rest_framework.authtoken import views # Import the authtoken views
+from users.views import RegisterUserView # Import your new view
+from django.conf import settings  # Import settings
+from django.conf.urls.static import static  # Import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('posts/', include('posts.urls')),
     path('users/', include('users.urls')),
     path('followers/', include('followers.urls')),
-    path('auth/register/', RegisterUserView.as_view(), name='register'), # New registration path
-    path('auth/login/', views.obtain_auth_token, name='login'), # Built-in login path
+    # This is for the API, it's a DRF view.
+    path('auth/register/', RegisterUserView.as_view(), name='api-register'),
+    # This is for the API, it's a DRF view that only handles POST.
+    path('auth/login/', views.obtain_auth_token, name='api-login'),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
